@@ -57,7 +57,7 @@ export interface FloatingInstance {
  * @example
  * ```svelte
  * <script>
- *   import { createFloating, offset, flip, shift } from 'floating-ui-svelte'
+ *   import { createFloating, offset, flip, shift } from 'svelte-floating-attach'
  *
  *   let show = $state(false)
  *   const { ref, content } = createFloating()

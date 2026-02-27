@@ -1,5 +1,5 @@
 {
-  "name": "floating-ui-svelte",
+  "name": "svelte-floating-attach",
   "version": "1.0.0",
   "description": "Svelte 5 attachment-based wrapper for @floating-ui/dom",
   "license": "MIT",

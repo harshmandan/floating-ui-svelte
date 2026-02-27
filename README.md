@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="floating-ui-svelte.webp" alt="floating-ui-svelte" width="200" />
+  <img src="svelte-floating-attach.webp" alt="svelte-floating-attach" width="200" />
 </p>
 
-<h1 align="center">floating-ui-svelte</h1>
+<h1 align="center">svelte-floating-attach</h1>
 
 Svelte 5 <a href="https://svelte.dev/docs/svelte/@attach">attachment</a>-based wrapper for <a href="https://floating-ui.com/docs/getting-started"><code>@floating-ui/dom</code></a>. Position floating elements like tooltips, popovers, and dropdowns with automatic reactivity — no <code>$effect</code> or manual <code>update()</code> calls needed.
 
@@ -16,7 +16,7 @@ For middleware options, placement values, and positioning concepts, see the [Flo
 ## Install
 
 ```bash
-npm install floating-ui-svelte @floating-ui/dom
+npm install svelte-floating-attach @floating-ui/dom
 ```
 
 ## Usage
@@ -25,7 +25,7 @@ npm install floating-ui-svelte @floating-ui/dom
 
 ```svelte
 <script>
-  import { createFloating, offset, flip, shift } from 'floating-ui-svelte'
+  import { createFloating, offset, flip, shift } from 'svelte-floating-attach'
 
   let show = $state(false)
   const { ref, content } = createFloating()
@@ -53,8 +53,8 @@ A complete example showing how placement reacts to prop changes and how `onCompu
 <!-- Popover.svelte -->
 <script lang="ts">
   import type { Snippet } from 'svelte'
-  import type { Placement } from 'floating-ui-svelte'
-  import { createFloating, offset, flip, shift, hide } from 'floating-ui-svelte'
+  import type { Placement } from 'svelte-floating-attach'
+  import { createFloating, offset, flip, shift, hide } from 'svelte-floating-attach'
 
   interface Props {
     /** Preferred placement — may be overridden by flip() */
@@ -118,7 +118,7 @@ When the consumer passes a different `placement` prop, the attachment re-runs au
 
 ```svelte
 <script>
-  import { createFloating, offset, flip, shift } from 'floating-ui-svelte'
+  import { createFloating, offset, flip, shift } from 'svelte-floating-attach'
 
   let show = $state(false)
   const { ref, content, arrow, arrowMiddleware } = createFloating()
@@ -147,7 +147,7 @@ When the consumer passes a different `placement` prop, the attachment re-runs au
 
 ```svelte
 <script>
-  import { createFloating, createVirtualElement, offset } from 'floating-ui-svelte'
+  import { createFloating, createVirtualElement, offset } from 'svelte-floating-attach'
 
   const virtual = createVirtualElement({
     getBoundingClientRect: { x: 0, y: 0, top: 0, left: 0, bottom: 0, right: 0, width: 0, height: 0 }
@@ -215,7 +215,7 @@ With attachments, the same thing is automatic:
 
 ```svelte
 <script>
-  import { createFloating, flip, offset, shift } from 'floating-ui-svelte'
+  import { createFloating, flip, offset, shift } from 'svelte-floating-attach'
 
   let { placement = $bindable('bottom') } = $props()
 
