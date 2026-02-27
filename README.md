@@ -19,24 +19,23 @@ For middleware options, placement values, and positioning concepts, see the [Flo
 npm install svelte-floating-attach @floating-ui/dom
 ```
 
-`@floating-ui/dom` is a **peer dependency**, not bundled into this package. You install it yourself and control the version — no hidden duplicates, no version conflicts if other libraries in your project also depend on Floating UI.
+`@floating-ui/dom` is a **peer dependency**, not bundled into this package. You need to install it alongside to prevent version conflicts.
 
 ## Why this library?
 
-This library is heavily inspired by [`svelte-floating-ui`](https://github.com/fedorovvvv/svelte-floating-ui) — the most popular Floating UI wrapper for Svelte. If you're on Svelte 4 or an older version of Svelte 5, use that library instead.
+This library is heavily inspired by [`svelte-floating-ui`](https://github.com/fedorovvvv/svelte-floating-ui). If you're on ≤ Svelte 5.29 you should use that library instead.
 
-`svelte-floating-attach` is **intentionally Svelte 5 only**. It's built entirely on [attachments](https://svelte.dev/docs/svelte/@attach) (`{@attach}`), which landed in Svelte 5.29.0. This isn't a limitation — it's the whole point. Attachments solve real problems that actions (`use:`) can't, and this library is designed to take full advantage of them.
+`svelte-floating-attach` requires **≥ Svelte 5.29**. It uses [attachments](https://svelte.dev/docs/svelte/@attach) (`{@attach}`) API. Attachments work better than actions.
 
 ### What's different from `svelte-floating-ui`?
 
-| | `svelte-floating-attach` | `svelte-floating-ui` |
-| --- | --- | --- |
-| **Directive** | `{@attach}` (Svelte 5.29+) | `use:` (Svelte 3/4/5) |
-| **Reactivity** | Automatic — attachment re-runs when any `$state` in its arguments changes | Manual — requires `$effect` + `update()` to sync prop changes |
+|                             | `svelte-floating-attach`                                                            | `svelte-floating-ui`                                                               |
+| --------------------------- | ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| **Reactivity**              | Automatic — attachment re-runs when any `$state` in its arguments changes           | Manual (if using runes) — requires `$effect` + `update()` to sync prop changes     |
 | **Arrow/caret positioning** | Automatic — `left`/`top` styles applied to the arrow element after each computation | Manual — you read `middlewareData.arrow` in `onComputed` and apply styles yourself |
-| **`@floating-ui/dom`** | Peer dependency — you own the version, no duplicates | Direct dependency — bundled in, may duplicate if you also depend on it directly |
-| **Svelte stores** | None — plain closures | Uses `writable` stores for arrow refs and virtual elements |
-| **Bundle footprint** | ~5 KB compiled (re-exports from your existing `@floating-ui/dom`) | Bundles its own copy of `@floating-ui/dom` into the package |
+| **`@floating-ui/dom`**      | Peer dependency — installed separately, no duplicates                               | Direct dependency — bundled in, may duplicate if you also depend on it directly    |
+| **Svelte stores**           | None — plain closures                                                               | Uses `writable` stores for arrow refs and virtual elements                         |
+| **Bundle footprint**        | ~5 KB compiled (re-exports from your existing `@floating-ui/dom`)                   | Bundles its own copy of `@floating-ui/dom` into the package                        |
 
 ### Automatic reactivity
 
@@ -135,18 +134,6 @@ In `svelte-floating-attach`, this is built in. The library automatically applies
   <div {@attach arrow} class="arrow"></div>
 </div>
 ```
-
-No stores, no manual style application — just attach and go.
-
-### Peer dependency, not a bundled dependency
-
-`svelte-floating-ui` ships `@floating-ui/dom` as a **direct dependency** — it's bundled into the package. If your app (or another library) also depends on `@floating-ui/dom`, your bundler may include two copies.
-
-`svelte-floating-attach` uses `@floating-ui/dom` as a **peer dependency**. You install it yourself, so there's always exactly one copy in your project. You control when to upgrade, and you don't have to wait for a wrapper release to get the latest Floating UI fixes.
-
-### Smaller footprint
-
-The entire library compiles down to ~5 KB. It re-exports middleware and types from your existing `@floating-ui/dom` install rather than bundling its own copy. No Svelte stores, no extra runtime — just a thin layer of attachments on top of Floating UI.
 
 ## Usage
 
@@ -276,7 +263,7 @@ The library automatically applies `left`/`top` from `middlewareData.arrow` to th
 
 #### Pushing the arrow onto the edge
 
-The library positions the arrow *along* the correct edge (centering it on the reference) but does not push it *onto* the edge itself — that depends on your arrow's size and visual design. Use `onComputed` to offset the arrow so it pokes out of the floating element:
+The library positions the arrow _along_ the correct edge (centering it on the reference) but does not push it _onto_ the edge itself — that depends on your arrow's size and visual design. Use `onComputed` to offset the arrow so it pokes out of the floating element:
 
 ```svelte
 <script>
@@ -380,13 +367,13 @@ Without this offset the arrow stays fully inside the floating element. The offse
 
 Creates a floating instance. Returns:
 
-| Property              | Type                           | Description                                               |
-| --------------------- | ------------------------------ | --------------------------------------------------------- |
-| `ref`                 | `Attachment`                   | Attach to the reference/trigger element                   |
-| `content`             | `(options?) => Attachment`     | Returns an attachment for the floating element            |
+| Property              | Type                           | Description                                                                                                                                   |
+| --------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ref`                 | `Attachment`                   | Attach to the reference/trigger element                                                                                                       |
+| `content`             | `(options?) => Attachment`     | Returns an attachment for the floating element                                                                                                |
 | `arrow`               | `Attachment`                   | Attach to the arrow/caret element. `left`/`top` styles are applied automatically from `middlewareData.arrow` after each position computation. |
-| `arrowMiddleware`     | `(options?) => Middleware`     | Creates arrow middleware using the captured arrow element. Use in the `middleware` array passed to `content()`. |
-| `setVirtualReference` | `(el: VirtualElement) => void` | Set a virtual element as the reference                    |
+| `arrowMiddleware`     | `(options?) => Middleware`     | Creates arrow middleware using the captured arrow element. Use in the `middleware` array passed to `content()`.                               |
+| `setVirtualReference` | `(el: VirtualElement) => void` | Set a virtual element as the reference                                                                                                        |
 
 ### `FloatingContentOptions`
 
@@ -407,21 +394,6 @@ Creates a mutable [virtual element](https://floating-ui.com/docs/virtual-element
 ### Re-exports
 
 All middleware and types from `@floating-ui/dom` are re-exported for convenience, so you only need one import source.
-
-## How It Works
-
-Svelte 5 [attachments](https://svelte.dev/docs/svelte/@attach) run in the template's tracking context. When you write:
-
-```svelte
-<div {@attach content({ placement, middleware: [...] })}>
-```
-
-The `content(...)` thunk is evaluated inside an effect. When `placement` (a `$state` or `$bindable` value) changes, the attachment:
-
-1. Runs its cleanup function (tears down `autoUpdate` listeners)
-2. Re-runs with the new options (sets up fresh `autoUpdate` + computes position)
-
-This is the same teardown/re-init pattern that Svelte uses for all attachments. For floating-ui, the cost is negligible since `autoUpdate` setup is just a few event listeners and observers.
 
 ## License
 
