@@ -1,0 +1,48 @@
+{
+  "name": "floating-ui-svelte",
+  "version": "1.0.0",
+  "description": "Svelte 5 attachment-based wrapper for @floating-ui/dom",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "package": "svelte-package -o dist",
+    "prepublishOnly": "npm run package"
+  },
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
+  ],
+  "peerDependencies": {
+    "@floating-ui/dom": "^1.6.0",
+    "svelte": "^5.29.0"
+  },
+  "devDependencies": {
+    "@floating-ui/dom": "^1.7.5",
+    "@sveltejs/package": "^2.3.0",
+    "@sveltejs/vite-plugin-svelte": "^5.0.0",
+    "svelte": "^5.53.0",
+    "svelte-check": "^4.1.0",
+    "typescript": "^5.8.0"
+  },
+  "keywords": [
+    "svelte",
+    "svelte5",
+    "floating-ui",
+    "popover",
+    "tooltip",
+    "dropdown",
+    "attachments",
+    "positioning"
+  ]
+}
