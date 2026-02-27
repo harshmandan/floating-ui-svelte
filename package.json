@@ -1,6 +1,6 @@
 {
   "name": "svelte-floating-attach",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Svelte 5 attachment-based wrapper for @floating-ui/dom",
   "license": "MIT",
   "type": "module",
@@ -34,6 +34,14 @@
     "svelte": "^5.53.0",
     "svelte-check": "^4.1.0",
     "typescript": "^5.8.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshmandan/svelte-floating-attach.git"
+  },
+  "homepage": "https://github.com/harshmandan/svelte-floating-attach",
+  "bugs": {
+    "url": "https://github.com/harshmandan/svelte-floating-attach/issues"
   },
   "keywords": [
     "svelte",
