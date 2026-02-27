@@ -19,6 +19,135 @@ For middleware options, placement values, and positioning concepts, see the [Flo
 npm install svelte-floating-attach @floating-ui/dom
 ```
 
+`@floating-ui/dom` is a **peer dependency**, not bundled into this package. You install it yourself and control the version — no hidden duplicates, no version conflicts if other libraries in your project also depend on Floating UI.
+
+## Why this library?
+
+This library is heavily inspired by [`svelte-floating-ui`](https://github.com/fedorovvvv/svelte-floating-ui) — the most popular Floating UI wrapper for Svelte. If you're on Svelte 4 or an older version of Svelte 5, use that library instead.
+
+`svelte-floating-attach` is **intentionally Svelte 5 only**. It's built entirely on [attachments](https://svelte.dev/docs/svelte/@attach) (`{@attach}`), which landed in Svelte 5.29.0. This isn't a limitation — it's the whole point. Attachments solve real problems that actions (`use:`) can't, and this library is designed to take full advantage of them.
+
+### What's different from `svelte-floating-ui`?
+
+| | `svelte-floating-attach` | `svelte-floating-ui` |
+| --- | --- | --- |
+| **Directive** | `{@attach}` (Svelte 5.29+) | `use:` (Svelte 3/4/5) |
+| **Reactivity** | Automatic — attachment re-runs when any `$state` in its arguments changes | Manual — requires `$effect` + `update()` to sync prop changes |
+| **Arrow/caret positioning** | Automatic — `left`/`top` styles applied to the arrow element after each computation | Manual — you read `middlewareData.arrow` in `onComputed` and apply styles yourself |
+| **`@floating-ui/dom`** | Peer dependency — you own the version, no duplicates | Direct dependency — bundled in, may duplicate if you also depend on it directly |
+| **Svelte stores** | None — plain closures | Uses `writable` stores for arrow refs and virtual elements |
+| **Bundle footprint** | ~5 KB compiled (re-exports from your existing `@floating-ui/dom`) | Bundles its own copy of `@floating-ui/dom` into the package |
+
+### Automatic reactivity
+
+Actions (`use:`) don't re-run when their arguments change. With `svelte-floating-ui`, you need a manual `$effect` to push updated options:
+
+```svelte
+<script>
+  import { createFloatingActions } from 'svelte-floating-ui'
+  import { flip, offset, shift } from 'svelte-floating-ui/dom'
+
+  let { placement = $bindable('bottom') } = $props()
+
+  const [floatingRef, floatingContent, updatePosition] = createFloatingActions({
+    placement,
+    middleware: [offset(8), shift(), flip()],
+  })
+
+  // Required: manually sync reactive props to the action
+  $effect(() => {
+    updatePosition({ placement })
+  })
+</script>
+
+<button use:floatingRef>Trigger</button>
+<div use:floatingContent>Content</div>
+```
+
+Attachments run in the template's reactive tracking context — when `placement` changes, the attachment tears down and re-runs with the new value. No `$effect`, no `update()`:
+
+```svelte
+<script>
+  import { createFloating, flip, offset, shift } from 'svelte-floating-attach'
+
+  let { placement = $bindable('bottom') } = $props()
+
+  const { ref, content } = createFloating()
+</script>
+
+<button {@attach ref}>Trigger</button>
+<div {@attach content({
+  placement,
+  middleware: [offset(8), shift(), flip()],
+})}>
+  Content
+</div>
+```
+
+### Automatic arrow/caret positioning
+
+In `svelte-floating-ui`, you create a writable store for the arrow element and manually apply its computed position inside `onComputed`:
+
+```svelte
+<script>
+  import { createFloatingActions, arrow } from 'svelte-floating-ui'
+  import { createArrowRef } from 'svelte-floating-ui'
+
+  const arrowRef = createArrowRef()
+
+  const [floatingRef, floatingContent] = createFloatingActions({
+    middleware: [arrow({ element: arrowRef })],
+    onComputed({ placement, middlewareData }) {
+      // You must manually read and apply arrow styles
+      const { x, y } = middlewareData.arrow
+      const staticSide = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' }[
+        placement.split('-')[0]
+      ]
+      Object.assign($arrowRef.style, {
+        left: x != null ? `${x}px` : '',
+        top: y != null ? `${y}px` : '',
+        [staticSide]: '-4px',
+      })
+    },
+  })
+</script>
+
+<div use:floatingContent>
+  Content
+  <div bind:this={$arrowRef} class="arrow"></div>
+</div>
+```
+
+In `svelte-floating-attach`, this is built in. The library automatically applies `left`/`top` from `middlewareData.arrow` to the arrow element after every computation, and resets stale `right`/`bottom` when placement changes:
+
+```svelte
+<script>
+  import { createFloating, offset, flip, shift } from 'svelte-floating-attach'
+
+  const { ref, content, arrow, arrowMiddleware } = createFloating()
+</script>
+
+<div {@attach content({
+  placement: 'top',
+  middleware: [offset(8), flip(), shift(), arrowMiddleware({ padding: 4 })],
+})}>
+  Content
+  <div {@attach arrow} class="arrow"></div>
+</div>
+```
+
+No stores, no manual style application — just attach and go.
+
+### Peer dependency, not a bundled dependency
+
+`svelte-floating-ui` ships `@floating-ui/dom` as a **direct dependency** — it's bundled into the package. If your app (or another library) also depends on `@floating-ui/dom`, your bundler may include two copies.
+
+`svelte-floating-attach` uses `@floating-ui/dom` as a **peer dependency**. You install it yourself, so there's always exactly one copy in your project. You control when to upgrade, and you don't have to wait for a wrapper release to get the latest Floating UI fixes.
+
+### Smaller footprint
+
+The entire library compiles down to ~5 KB. It re-exports middleware and types from your existing `@floating-ui/dom` install rather than bundling its own copy. No Svelte stores, no extra runtime — just a thin layer of attachments on top of Floating UI.
+
 ## Usage
 
 ### Basic Popover
@@ -244,56 +373,6 @@ Without this offset the arrow stays fully inside the floating element. The offse
   </div>
 {/if}
 ```
-
-## Why Svelte 5 Only?
-
-Svelte 5 introduced [attachments](https://svelte.dev/docs/svelte/@attach) (`{@attach}`), which run in the template's reactive tracking context. This means they automatically re-run when any reactive value in their arguments changes — something **actions** (`use:`) cannot do.
-
-With actions, you need a manual `$effect` to push updated options whenever a prop like `placement` changes:
-
-```svelte
-<script>
-  import { createFloatingActions } from 'svelte-floating-ui'
-  import { flip, offset, shift } from 'svelte-floating-ui/dom'
-
-  let { placement = $bindable('bottom') } = $props()
-
-  const [floatingRef, floatingContent, updatePosition] = createFloatingActions({
-    placement,
-    middleware: [offset(8), shift(), flip()],
-  })
-
-  // Required: manually sync reactive props to the action
-  $effect(() => {
-    updatePosition({ placement })
-  })
-</script>
-
-<button use:floatingRef>Trigger</button>
-<div use:floatingContent>Content</div>
-```
-
-With attachments, the same thing is automatic:
-
-```svelte
-<script>
-  import { createFloating, flip, offset, shift } from 'svelte-floating-attach'
-
-  let { placement = $bindable('bottom') } = $props()
-
-  const { ref, content } = createFloating()
-</script>
-
-<button {@attach ref}>Trigger</button>
-<div {@attach content({
-  placement,
-  middleware: [offset(8), shift(), flip()],
-})}>
-  Content
-</div>
-```
-
-This library is built entirely on attachments, which is why it requires Svelte `>=5.29.0`. If you're on Svelte 4 or an older version of Svelte 5, check out [`svelte-floating-ui`](https://github.com/fedorovvvv/svelte-floating-ui) — the action-based library that inspired this one.
 
 ## API
 
