@@ -1,25 +1,26 @@
-<p align="center">
+<div align="center">
+
   <img src="./svelte-floating-attach.webp" alt="svelte-floating-attach" width="300" />
-</p>
 
-<h1 align="center">svelte-floating-attach</h1>
+  <h1>svelte-floating-attach</h1>
 
-Svelte 5 <a href="https://svelte.dev/docs/svelte/@attach">attachment</a>-based wrapper for <a href="https://floating-ui.com/docs/getting-started"><code>@floating-ui/dom</code></a>. Position floating elements like tooltips, popovers, and dropdowns with automatic reactivity — no <code>$effect</code> or manual <code>update()</code> calls needed.
+  <a href="https://www.npmjs.com/package/svelte-floating-attach" target="_blank">
+    <img src="https://img.shields.io/npm/v/svelte-floating-attach"/>
+  </a>
+</div>
 
-For middleware options, placement values, and positioning concepts, see the [Floating UI docs](https://floating-ui.com/docs/getting-started).
+Svelte <a href="https://svelte.dev/docs/svelte/@attach">attachment</a> for <a href="https://floating-ui.com/docs/getting-started"><code>floating-ui</code></a>. Position floating elements like tooltips, popovers, and dropdowns with automatic reactivity - most modern floating-ui wrapper for svelte.
 
-## Requirements
-
-- Svelte `>=5.29.0` (attachment support)
-- `@floating-ui/dom` `>=1.6.0`
-
-## Install
+## Installation and requirement
 
 ```bash
 npm install svelte-floating-attach @floating-ui/dom
 ```
 
 `@floating-ui/dom` is a **peer dependency**, not bundled into this package. You need to install it alongside to prevent version conflicts.
+
+- Svelte `>=5.29.0` (attachment support)
+- `@floating-ui/dom` `>=1.6.0`
 
 ## Why this library?
 
