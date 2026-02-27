@@ -113,10 +113,11 @@ export function createFloating(): FloatingInstance {
     const {
       placement = 'bottom',
       strategy = 'absolute',
-      middleware,
+      middleware: rawMiddleware,
       autoUpdate: autoUpdateOption = true,
       onComputed,
     } = options
+    const middleware = rawMiddleware?.filter(Boolean) as Middleware[] | undefined
 
     return (node: Element) => {
       const floatingEl = node as FloatingElement
@@ -128,7 +129,7 @@ export function createFloating(): FloatingInstance {
         computePosition(referenceEl, floatingEl, {
           placement,
           strategy,
-          middleware: middleware?.filter(Boolean) as Middleware[] | undefined,
+          middleware,
         }).then((result) => {
           if (destroyed) return
           Object.assign(floatingEl.style, {
