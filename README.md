@@ -116,6 +116,8 @@ When the consumer passes a different `placement` prop, the attachment re-runs au
 
 ### Tooltip with Arrow
 
+The library automatically applies `left`/`top` from `middlewareData.arrow` to the arrow element, positioning it along the edge to stay centered on the reference. It also resets stale `right`/`bottom` values when placement changes.
+
 ```svelte
 <script>
   import { createFloating, offset, flip, shift } from 'svelte-floating-attach'
@@ -142,6 +144,66 @@ When the consumer passes a different `placement` prop, the attachment re-runs au
   </div>
 {/if}
 ```
+
+#### Pushing the arrow onto the edge
+
+The library positions the arrow *along* the correct edge (centering it on the reference) but does not push it *onto* the edge itself — that depends on your arrow's size and visual design. Use `onComputed` to offset the arrow so it pokes out of the floating element:
+
+```svelte
+<script>
+  import { createFloating, offset, flip, shift } from 'svelte-floating-attach'
+
+  let show = $state(false)
+  let arrowEl = $state()
+  const { ref, content, arrow, arrowMiddleware } = createFloating()
+
+  function onComputed(data) {
+    if (!arrowEl) return
+
+    // The side of the floating element that faces the reference:
+    //   placement "top"    → arrow sits on "bottom" edge
+    //   placement "bottom" → arrow sits on "top" edge
+    //   placement "left"   → arrow sits on "right" edge
+    //   placement "right"  → arrow sits on "left" edge
+    const side = data.placement.split('-')[0]
+    const oppositeSide = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' }[side]
+
+    // Nudge the arrow outward so it straddles the edge (half in, half out)
+    arrowEl.style[oppositeSide] = `${-arrowEl.offsetWidth / 2}px`
+  }
+</script>
+
+<button
+  {@attach ref}
+  onmouseenter={() => show = true}
+  onmouseleave={() => show = false}
+>
+  Hover me
+</button>
+
+{#if show}
+  <div {@attach content({
+    placement: 'top',
+    middleware: [offset(8), flip(), shift(), arrowMiddleware({ padding: 4 })],
+    onComputed,
+  })}>
+    Tooltip text
+    <div bind:this={arrowEl} {@attach arrow} class="arrow"></div>
+  </div>
+{/if}
+
+<style>
+  .arrow {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: inherit;
+    transform: rotate(45deg);
+  }
+</style>
+```
+
+Without this offset the arrow stays fully inside the floating element. The offset value controls how much it pokes out — use `-offsetWidth / 2` to center it on the edge, or any other value that fits your design.
 
 ### Virtual Element
 
@@ -243,8 +305,8 @@ Creates a floating instance. Returns:
 | --------------------- | ------------------------------ | --------------------------------------------------------- |
 | `ref`                 | `Attachment`                   | Attach to the reference/trigger element                   |
 | `content`             | `(options?) => Attachment`     | Returns an attachment for the floating element            |
-| `arrow`               | `Attachment`                   | Attach to the arrow/caret element                         |
-| `arrowMiddleware`     | `(options?) => Middleware`     | Creates arrow middleware using the captured arrow element |
+| `arrow`               | `Attachment`                   | Attach to the arrow/caret element. `left`/`top` styles are applied automatically from `middlewareData.arrow` after each position computation. |
+| `arrowMiddleware`     | `(options?) => Middleware`     | Creates arrow middleware using the captured arrow element. Use in the `middleware` array passed to `content()`. |
 | `setVirtualReference` | `(el: VirtualElement) => void` | Set a virtual element as the reference                    |
 
 ### `FloatingContentOptions`
