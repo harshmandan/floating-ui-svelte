@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="svelte-floating-attach.webp" alt="svelte-floating-attach" width="200" />
+  <img src="./svelte-floating-attach.webp" alt="svelte-floating-attach" width="200" />
 </p>
 
 <h1 align="center">svelte-floating-attach</h1>
