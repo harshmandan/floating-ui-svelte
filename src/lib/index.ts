@@ -136,6 +136,17 @@ export function createFloating(): FloatingInstance {
             left: `${result.x}px`,
             top: `${result.y}px`,
           })
+
+          if (arrowEl && result.middlewareData.arrow) {
+            const { x: arrowX, y: arrowY } = result.middlewareData.arrow
+            Object.assign(arrowEl.style, {
+              left: arrowX != null ? `${arrowX}px` : '',
+              top: arrowY != null ? `${arrowY}px` : '',
+              right: '',
+              bottom: '',
+            })
+          }
+
           onComputed?.(result)
         })
       }
