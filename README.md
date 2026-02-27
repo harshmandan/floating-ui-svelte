@@ -4,9 +4,7 @@
 
 <h1 align="center">floating-ui-svelte</h1>
 
-<p align="center">
-  Svelte 5 <a href="https://svelte.dev/docs/svelte/@attach">attachment</a>-based wrapper for <a href="https://floating-ui.com/docs/getting-started"><code>@floating-ui/dom</code></a>. Position floating elements like tooltips, popovers, and dropdowns with automatic reactivity — no <code>$effect</code> or manual <code>update()</code> calls needed.
-</p>
+Svelte 5 <a href="https://svelte.dev/docs/svelte/@attach">attachment</a>-based wrapper for <a href="https://floating-ui.com/docs/getting-started"><code>@floating-ui/dom</code></a>. Position floating elements like tooltips, popovers, and dropdowns with automatic reactivity — no <code>$effect</code> or manual <code>update()</code> calls needed.
 
 For middleware options, placement values, and positioning concepts, see the [Floating UI docs](https://floating-ui.com/docs/getting-started).
 
@@ -241,25 +239,25 @@ This library is built entirely on attachments, which is why it requires Svelte `
 
 Creates a floating instance. Returns:
 
-| Property | Type | Description |
-|---|---|---|
-| `ref` | `Attachment` | Attach to the reference/trigger element |
-| `content` | `(options?) => Attachment` | Returns an attachment for the floating element |
-| `arrow` | `Attachment` | Attach to the arrow/caret element |
-| `arrowMiddleware` | `(options?) => Middleware` | Creates arrow middleware using the captured arrow element |
-| `setVirtualReference` | `(el: VirtualElement) => void` | Set a virtual element as the reference |
+| Property              | Type                           | Description                                               |
+| --------------------- | ------------------------------ | --------------------------------------------------------- |
+| `ref`                 | `Attachment`                   | Attach to the reference/trigger element                   |
+| `content`             | `(options?) => Attachment`     | Returns an attachment for the floating element            |
+| `arrow`               | `Attachment`                   | Attach to the arrow/caret element                         |
+| `arrowMiddleware`     | `(options?) => Middleware`     | Creates arrow middleware using the captured arrow element |
+| `setVirtualReference` | `(el: VirtualElement) => void` | Set a virtual element as the reference                    |
 
 ### `FloatingContentOptions`
 
 Options passed to `content()`. See [Floating UI docs](https://floating-ui.com/docs/computePosition) for details on `placement`, `strategy`, and `middleware`.
 
-| Option | Type | Default | Description |
-|---|---|---|---|
-| `placement` | [`Placement`](https://floating-ui.com/docs/computePosition#placement) | `'bottom'` | Where to place the floating element |
-| `strategy` | [`Strategy`](https://floating-ui.com/docs/computePosition#strategy) | `'absolute'` | CSS positioning strategy |
-| `middleware` | [`Middleware[]`](https://floating-ui.com/docs/middleware) | `undefined` | Floating UI middleware array |
-| `autoUpdate` | `boolean \| AutoUpdateOptions` | `true` | [Auto-update](https://floating-ui.com/docs/autoUpdate) on scroll/resize |
-| `onComputed` | `(data: ComputePositionReturn) => void` | `undefined` | Callback after position computation |
+| Option       | Type                                                                  | Default      | Description                                                             |
+| ------------ | --------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------- |
+| `placement`  | [`Placement`](https://floating-ui.com/docs/computePosition#placement) | `'bottom'`   | Where to place the floating element                                     |
+| `strategy`   | [`Strategy`](https://floating-ui.com/docs/computePosition#strategy)   | `'absolute'` | CSS positioning strategy                                                |
+| `middleware` | [`Middleware[]`](https://floating-ui.com/docs/middleware)             | `undefined`  | Floating UI middleware array                                            |
+| `autoUpdate` | `boolean \| AutoUpdateOptions`                                        | `true`       | [Auto-update](https://floating-ui.com/docs/autoUpdate) on scroll/resize |
+| `onComputed` | `(data: ComputePositionReturn) => void`                               | `undefined`  | Callback after position computation                                     |
 
 ### `createVirtualElement(config)`
 
