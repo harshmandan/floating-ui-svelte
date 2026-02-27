@@ -1,6 +1,12 @@
-# floating-ui-svelte
+<p align="center">
+  <img src="floating-ui-svelte.webp" alt="floating-ui-svelte" width="200" />
+</p>
 
-Svelte 5 [attachment](https://svelte.dev/docs/svelte/@attach)-based wrapper for [`@floating-ui/dom`](https://floating-ui.com/docs/getting-started). Position floating elements like tooltips, popovers, and dropdowns with automatic reactivity — no `$effect` or manual `update()` calls needed.
+<h1 align="center">floating-ui-svelte</h1>
+
+<p align="center">
+  Svelte 5 <a href="https://svelte.dev/docs/svelte/@attach">attachment</a>-based wrapper for <a href="https://floating-ui.com/docs/getting-started"><code>@floating-ui/dom</code></a>. Position floating elements like tooltips, popovers, and dropdowns with automatic reactivity — no <code>$effect</code> or manual <code>update()</code> calls needed.
+</p>
 
 For middleware options, placement values, and positioning concepts, see the [Floating UI docs](https://floating-ui.com/docs/getting-started).
 
