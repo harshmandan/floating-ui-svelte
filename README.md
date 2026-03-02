@@ -7,6 +7,10 @@
   <a href="https://www.npmjs.com/package/svelte-floating-attach" target="_blank">
     <img src="https://img.shields.io/npm/v/svelte-floating-attach"/>
   </a>
+
+  <a href="https://www.npmjs.com/package/svelte-floating-attach" target="_blank">
+    <img src="https://img.shields.io/npm/dm/svelte-floating-attach"/>
+  </a>
 </div>
 
 Svelte <a href="https://svelte.dev/docs/svelte/@attach">attachment</a> for <a href="https://floating-ui.com/docs/getting-started"><code>floating-ui</code></a>. Position floating elements like tooltips, popovers, and dropdowns with automatic reactivity - most modern floating-ui wrapper for svelte.
