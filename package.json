@@ -1,9 +1,10 @@
 {
   "name": "svelte-floating-attach",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Svelte 5 attachment-based wrapper for @floating-ui/dom",
   "license": "MIT",
   "type": "module",
+  "sideEffects": false,
   "scripts": {
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "package": "svelte-package -o dist",
